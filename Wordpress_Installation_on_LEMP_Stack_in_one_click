@@ -4,12 +4,18 @@
 # Description - Installs and Configures LEMP Stack and then Wordpress for Port 80 only, in just 1 click.
 
 installations() {
-add-apt-repository -y ppa:ondrej/php
 apt update -y; apt upgrade -y -d; apt dist-upgrade -y;
-apt install nginx -y
-apt install php7.1-mcrypt php7.1-intl php7.1-curl php7.1-xsl php7.1-mbstring php7.1-xsl php7.1-zip php7.1-soap php7.1-gd php7.1-bcmath php7.1-mysql php7.1-fpm -y
-apt install mysql-server mysql-client -y
-apt install composer -y
+apt install -y software-properties-common;
+add-apt-repository -y ppa:ondrej/php;
+apt update -y;
+apt install nginx -y;
+apt install php7.1-mcrypt php7.1-intl php7.1-curl php7.1-xsl php7.1-mbstring php7.1-xsl php7.1-zip php7.1-soap php7.1-gd php7.1-bcmath php7.1-mysql php7.1-fpm -y;
+apt install mysql-server mysql-client -y;
+apt install composer -y;
+loc="$(readlink -f ${BASH_SOURCE[0]})";
+echo -e "All Installations are done.\nNow your system will reboot.\nRun this script with parameter 7 after reboot.\nExample:- bash $loc 7";
+read -p "Press Enter to continue" </dev/tty
+reboot
 }
 
 conf_php() {
@@ -131,6 +137,12 @@ conf_nginx
 conf_db
 ;;
 5)
+conf_wp
+;;
+7)
+conf_php
+conf_nginx
+conf_db
 conf_wp
 ;;
 *)
