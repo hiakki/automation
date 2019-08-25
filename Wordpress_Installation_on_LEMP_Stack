@@ -1,0 +1,143 @@
+#!/bin/bash
+# Author - Akshay Gupta
+# Version - 1.0.0
+# Description - Installs and Configures LEMP Stack and then Wordpress for Port 80 only, in just 1 click.
+
+installations() {
+add-apt-repository -y ppa:ondrej/php
+apt update -y; apt upgrade -y -d; apt dist-upgrade -y;
+apt install nginx -y
+apt install php7.1-mcrypt php7.1-intl php7.1-curl php7.1-xsl php7.1-mbstring php7.1-xsl php7.1-zip php7.1-soap php7.1-gd php7.1-bcmath php7.1-mysql php7.1-fpm -y
+apt install mysql-server mysql-client -y
+apt install composer -y
+}
+
+conf_php() {
+sed -i 's/memory_limit = -1/memory_limit = 2G/g' /etc/php/7.1/cli/php.ini
+sed -i 's/max_execution_time = 30/max_execution_time = 1800/g' /etc/php/7.1/cli/php.ini
+sed -i 's/zlib.output_compression = Off/zlib.output_compression = On/g' /etc/php/7.1/cli/php.ini
+
+cat /etc/php/7.1/cli/php.ini | grep memory_limit
+cat /etc/php/7.1/cli/php.ini | grep max_execution_time
+cat /etc/php/7.1/cli/php.ini | grep 'zlib.output_compression ='
+
+sed -i 's/memory_limit = 128M/memory_limit = 2G/g' /etc/php/7.1/fpm/php.ini
+sed -i 's/max_execution_time = 30/max_execution_time = 1800/g' /etc/php/7.1/fpm/php.ini
+sed -i 's/zlib.output_compression = Off/zlib.output_compression = On/g' /etc/php/7.1/fpm/php.ini
+
+cat /etc/php/7.1/fpm/php.ini | grep memory_limit
+cat /etc/php/7.1/fpm/php.ini | grep max_execution_time
+cat /etc/php/7.1/fpm/php.ini | grep 'zlib.output_compression ='
+service php7.1-fpm restart
+}
+
+conf_nginx() {
+mkdir -p /etc/nginx/website;
+if [[ ! -e /etc/nginx/php_loc.conf ]]; then
+cat >> /etc/nginx/php_loc.conf << PHP_BLOCK
+#	pass PHP scripts to FastCGI server
+	location ~ \.php$ {
+	root           /etc/nginx/website;
+	fastcgi_index  index.php;
+#	try_files \$uri =404;
+#		With php-fpm (or other unix sockets):
+	fastcgi_pass fastcgi_backend;
+	include        fastcgi_params;
+	fastcgi_param  SCRIPT_FILENAME  \$document_root\$fastcgi_script_name;
+}
+PHP_BLOCK
+fi
+if [[ ! -e /etc/nginx/sites-available/website ]]; then
+	cp /etc/nginx/sites-available/default /etc/nginx/sites-available/website;
+
+cat >> /etc/nginx/sites-available/website.tmp << UPSTREAM
+upstream fastcgi_backend {
+	server  unix:/run/php/php7.1-fpm.sock;
+}
+UPSTREAM
+	cat /etc/nginx/sites-available/website.tmp /etc/nginx/sites-available/website > /etc/nginx/sites-available/website.new;
+	mv /etc/nginx/sites-available/website.new /etc/nginx/sites-available/website;
+	rm -rf /etc/nginx/sites-available/website.tmp;
+	sed -i 's/fastcgi_pass 127.0.0.1:9000/fastcgi_pass 127.0.0.1:9000;\
+	include \/etc\/nginx\/php_loc.conf/g' /etc/nginx/sites-available/website;
+	sed -i 's/root \/var\/www\/html/root \/etc\/nginx\/website/g' /etc/nginx/sites-available/website;
+	sed -i 's/index index.html index.htm index.nginx-debian.html/index index.php index.html index.htm index.nginx-debian.html/g' /etc/nginx/sites-available/website;
+	sed -i 's/\include \/etc\/nginx\/sites-enabled\/\*/include \/etc\/nginx\/sites-enabled\/website/g' /etc/nginx/nginx.conf;
+fi
+if [[ ! -e /etc/nginx/sites-enabled/website ]]; then
+	ln -s /etc/nginx/sites-available/website /etc/nginx/sites-enabled/;
+fi
+if [[ ! -e /etc/nginx/website/test.php ]]; then
+	echo '<?php phpinfo(); ?>' > /etc/nginx/website/test.php;
+fi
+service nginx restart
+}
+conf_db() {
+	mysql -u root -e "
+	create database websiteDB;
+	CREATE USER admin@localhost IDENTIFIED BY 'password';
+	GRANT ALL PRIVILEGES ON *.* TO admin@localhost;
+	FLUSH PRIVILEGES;" -h localhost;
+}
+conf_wp() {
+	cd /root/
+if [[ ! -e latest.tar.gz ]]; then
+	wget http://wordpress.org/latest.tar.gz -O latest.tar.gz
+fi
+if [[ ! -d wordpress ]]; then
+	tar xzf latest.tar.gz
+fi
+	cd wordpress
+if [[ ! -e wp-config.php ]]; then
+	touch wp-config.php
+cat >> wp-config.php << WP_CONF
+<?php
+define( 'DB_NAME', 'websiteDB' );
+define( 'DB_USER', 'admin' );
+define( 'DB_PASSWORD', 'password' );
+define( 'DB_HOST', 'localhost' );
+define( 'DB_CHARSET', 'utf8' );
+define( 'DB_COLLATE', '' );
+\$table_prefix = 'wp_';
+define( 'WP_DEBUG', false );
+if ( ! defined( 'ABSPATH' ) ) {
+        define( 'ABSPATH', dirname( __FILE__ ) . '/' );
+}
+require_once( ABSPATH . 'wp-settings.php' );
+WP_CONF
+	curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> wp-config.php;
+	echo '?>' >> wp-config.php;
+fi
+	cd /root/
+	cp wordpress/* /etc/nginx/website/ -r
+	mkdir -p /etc/nginx/website/wp-content/uploads
+	chown -R :www-data /etc/nginx/website/*
+	rm -rf /etc/nginx/sites-enabled/website;
+	ln -s /etc/nginx/sites-available/website /etc/nginx/sites-enabled/;
+	service nginx restart;
+}
+
+case "$1" in
+1)
+installations
+;;
+2)
+conf_php
+;;
+3)
+conf_nginx
+;;
+4)
+conf_db
+;;
+5)
+conf_wp
+;;
+*)
+installations
+conf_php
+conf_nginx
+conf_db
+conf_wp
+;;
+esac
