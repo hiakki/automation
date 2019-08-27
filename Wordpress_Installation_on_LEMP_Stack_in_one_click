@@ -4,7 +4,7 @@
 # Description - Installs and Configures LEMP Stack and then Wordpress for Port 80 only, in just 1 click.
 
 installations() {
-apt update -y; apt upgrade -y -d; apt dist-upgrade -y;
+apt update -y -d; apt upgrade -y -d; apt dist-upgrade -y -d;
 apt install -y software-properties-common;
 add-apt-repository -y ppa:ondrej/php;
 apt update -y;
