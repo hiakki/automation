@@ -93,9 +93,9 @@ fi
 	cd wordpress
 if [[ ! -e wp-config.php ]]; then
 	cp wp-config-sample.php wp-config.php
-	sed -i "s/define( 'DB_NAME', 'database_name_here' )/define( 'DB_NAME', 'websiteDB' )/g" /etc/nginx/website/wp-config.php
-	sed -i "s/define( 'DB_USER', 'username_here' )/define( 'DB_USER', 'admin' )/g" /etc/nginx/website/wp-config.php
-	sed -i "s/define( 'DB_PASSWORD', 'password_here' )/define( 'DB_PASSWORD', 'password' )/g" /etc/nginx/website/wp-config.php
+	sed -i "s/define( 'DB_NAME', 'database_name_here' )/define( 'DB_NAME', 'websiteDB' )/g" wp-config.php
+	sed -i "s/define( 'DB_USER', 'username_here' )/define( 'DB_USER', 'admin' )/g" wp-config.php
+	sed -i "s/define( 'DB_PASSWORD', 'password_here' )/define( 'DB_PASSWORD', 'password' )/g" wp-config.php
 fi
 	cd /root/
 	cp wordpress/* /etc/nginx/website/ -r
