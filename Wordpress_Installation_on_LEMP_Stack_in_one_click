@@ -137,7 +137,7 @@ conf_wp
 7)
 echo "=====================START=========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Updates, Upgrades and Distribution Upgrades"					>> /root/wordpress_lemp_stack_setup.log  2>&1
-installations
+installations										>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Configuring php.ini for nginx and Wordpress"					>> /root/wordpress_lemp_stack_setup.log  2>&1
 conf_php										>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Configuring nginx.conf and sites-available/website for php and Wordpress"		>> /root/wordpress_lemp_stack_setup.log  2>&1
