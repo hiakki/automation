@@ -135,6 +135,7 @@ conf_db
 conf_wp
 ;;
 7)
+clear
 echo "=====================START=========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Updates, Upgrades and Distribution Upgrades"					>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Updates, Upgrades and Distribution Upgrades"
