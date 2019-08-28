@@ -135,18 +135,18 @@ conf_db
 conf_wp
 ;;
 7)
-echo "=====================START=========================="				>> /root/wordpress_lemp_stack_setup.log
-echo "Updates, Upgrades and Distribution Upgrades"					>> /root/wordpress_lemp_stack_setup.log
+echo "=====================START=========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Updates, Upgrades and Distribution Upgrades"					>> /root/wordpress_lemp_stack_setup.log  2>&1
 installations
-echo "Configuring php.ini for nginx and Wordpress"					>> /root/wordpress_lemp_stack_setup.log
-conf_php										>> /root/wordpress_lemp_stack_setup.log
-echo "Configuring nginx.conf and sites-available/website for php and Wordpress"		>> /root/wordpress_lemp_stack_setup.log
-conf_nginx										>> /root/wordpress_lemp_stack_setup.log
-echo "Creating DB and User"								>> /root/wordpress_lemp_stack_setup.log
-conf_db											>> /root/wordpress_lemp_stack_setup.log
-echo "Downloading and setting up latest Wordpress version"				>> /root/wordpress_lemp_stack_setup.log
-conf_wp											>> /root/wordpress_lemp_stack_setup.log
-echo "======================END==========================="				>> /root/wordpress_lemp_stack_setup.log
+echo "Configuring php.ini for nginx and Wordpress"					>> /root/wordpress_lemp_stack_setup.log  2>&1
+conf_php										>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Configuring nginx.conf and sites-available/website for php and Wordpress"		>> /root/wordpress_lemp_stack_setup.log  2>&1
+conf_nginx										>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Creating DB and User"								>> /root/wordpress_lemp_stack_setup.log  2>&1
+conf_db											>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Downloading and setting up latest Wordpress version"				>> /root/wordpress_lemp_stack_setup.log  2>&1
+conf_wp											>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "======================END==========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
 ;;
 *)
 loc="$(readlink -f ${BASH_SOURCE[0]})"
@@ -155,3 +155,8 @@ read -p "Press Enter to continue" </dev/tty
 bash $loc 7
 ;;
 esac
+
+echo "Database Name: 	websiteDB"
+echo "Username: 	admin"
+echo "Password: 	password"
+echo "Database Host: 	localhost"
