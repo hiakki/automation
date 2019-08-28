@@ -12,10 +12,6 @@ apt install nginx -y;
 apt install php7.1-mcrypt php7.1-intl php7.1-curl php7.1-xsl php7.1-mbstring php7.1-xsl php7.1-zip php7.1-soap php7.1-gd php7.1-bcmath php7.1-mysql php7.1-fpm -y;
 apt install mysql-server mysql-client -y;
 apt install composer -y;
-loc="$(readlink -f ${BASH_SOURCE[0]})";
-echo -e "All Installations are done.\nNow your system will reboot.\nRun this script with parameter 7 after reboot.\nExample:- bash $loc 7";
-read -p "Press Enter to continue" </dev/tty
-reboot
 }
 
 conf_php() {
@@ -94,26 +90,6 @@ if [[ ! -d wordpress ]]; then
 	tar xzf latest.tar.gz
 fi
 	cd wordpress
-if [[ ! -e wp-config.php ]]; then
-	touch wp-config.php
-cat >> wp-config.php << WP_CONF
-<?php
-define( 'DB_NAME', 'websiteDB' );
-define( 'DB_USER', 'admin' );
-define( 'DB_PASSWORD', 'password' );
-define( 'DB_HOST', 'localhost' );
-define( 'DB_CHARSET', 'utf8' );
-define( 'DB_COLLATE', '' );
-\$table_prefix = 'wp_';
-define( 'WP_DEBUG', false );
-if ( ! defined( 'ABSPATH' ) ) {
-        define( 'ABSPATH', dirname( __FILE__ ) . '/' );
-}
-require_once( ABSPATH . 'wp-settings.php' );
-WP_CONF
-	curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> wp-config.php;
-	echo '?>' >> wp-config.php;
-fi
 	cd /root/
 	cp wordpress/* /etc/nginx/website/ -r
 	mkdir -p /etc/nginx/website/wp-content/uploads
@@ -123,9 +99,21 @@ fi
 	service nginx restart;
 }
 
-case "$1" in
+echo "01. Updates, Upgrades and Distribution Upgrades (Reboot is required)"
+echo "02. Configuring php.ini for nginx and Wordpress"
+echo "03. Configuring nginx.conf and sites-available/website for php and Wordpress"
+echo "04. Creating DB and User"
+echo "05. Downloading and setting up latest Wordpress version"
+echo "07. To perform all steps 01 to 05 quietly with all log in /root/wordpress_lemp_stack_setup.log (without any reboot)."
+echo "Default Choice is 07."
+read choice
+
+case $choice in
 1)
 installations
+echo -e "All Installations are done.\nNow your system will reboot."
+read -p "Press Enter to continue" </dev/tty
+reboot
 ;;
 2)
 conf_php
@@ -140,16 +128,22 @@ conf_db
 conf_wp
 ;;
 7)
-conf_php
-conf_nginx
-conf_db
-conf_wp
+echo "=====================START=========================="				>> /root/wordpress_lemp_stack_setup.log
+echo "Updates, Upgrades and Distribution Upgrades"					>> /root/wordpress_lemp_stack_setup.log
+installations										>> /root/wordpress_lemp_stack_setup.log
+echo "Configuring php.ini for nginx and Wordpress"					>> /root/wordpress_lemp_stack_setup.log
+conf_php										>> /root/wordpress_lemp_stack_setup.log
+echo "Configuring nginx.conf and sites-available/website for php and Wordpress"		>> /root/wordpress_lemp_stack_setup.log
+conf_nginx										>> /root/wordpress_lemp_stack_setup.log
+echo "Creating DB and User"								>> /root/wordpress_lemp_stack_setup.log
+conf_db											>> /root/wordpress_lemp_stack_setup.log
+echo "Downloading and setting up latest Wordpress version"				>> /root/wordpress_lemp_stack_setup.log
+conf_wp											>> /root/wordpress_lemp_stack_setup.log
+echo "======================END==========================="				>> /root/wordpress_lemp_stack_setup.log
 ;;
 *)
-installations
-conf_php
-conf_nginx
-conf_db
-conf_wp
+loc="$(readlink -f ${BASH_SOURCE[0]})"
+echo "Running $loc with Choice 07"
+read -p "Press Enter to continue" </dev/tty
 ;;
 esac
