@@ -152,6 +152,7 @@ echo "Downloading and setting up latest Wordpress version"				>> /root/wordpress
 echo "Downloading and setting up latest Wordpress version"
 conf_wp											>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "======================END==========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
+exit
 ;;
 *)
 loc="$(readlink -f ${BASH_SOURCE[0]})"
