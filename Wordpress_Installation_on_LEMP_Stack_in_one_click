@@ -99,14 +99,18 @@ fi
 	service nginx restart;
 }
 
-echo "01. Updates, Upgrades and Distribution Upgrades (Reboot is required)"
-echo "02. Configuring php.ini for nginx and Wordpress"
-echo "03. Configuring nginx.conf and sites-available/website for php and Wordpress"
-echo "04. Creating DB and User"
-echo "05. Downloading and setting up latest Wordpress version"
-echo "07. To perform all steps 01 to 05 quietly with all log in /root/wordpress_lemp_stack_setup.log (without any reboot)."
-echo "Default Choice is 07."
+echo "1. Updates, Upgrades and Distribution Upgrades (Reboot is required)"
+echo "2. Configuring php.ini for nginx and Wordpress"
+echo "3. Configuring nginx.conf and sites-available/website for php and Wordpress"
+echo "4. Creating DB and User"
+echo "5. Downloading and setting up latest Wordpress version"
+echo "7. To perform all steps 01 to 05 quietly with all log in /root/wordpress_lemp_stack_setup.log (without any reboot)."
+echo "Default Choice is 7."
 read choice
+
+if [ -z $choice ]; then
+	choice="$1"
+fi
 
 case $choice in
 1)
@@ -144,6 +148,7 @@ echo "======================END==========================="				>> /root/wordpres
 *)
 loc="$(readlink -f ${BASH_SOURCE[0]})"
 echo "Running $loc with Choice 07"
+bash $loc 7
 read -p "Press Enter to continue" </dev/tty
 ;;
 esac
