@@ -92,23 +92,10 @@ fi
 
 	cd wordpress
 if [[ ! -e wp-config.php ]]; then
-	touch wp-config.php
-cat >> wp-config.php << WP_CONF
-<?php
-define( 'DB_NAME', 'websiteDB' );
-define( 'DB_USER', 'admin' );
-define( 'DB_PASSWORD', 'password' );
-define( 'DB_HOST', 'localhost' );
-define( 'DB_CHARSET', 'utf8' );
-define( 'DB_COLLATE', '' );
-\$table_prefix = 'wp_';
-define( 'WP_DEBUG', false );
-if ( ! defined( 'ABSPATH' ) ) {
-        define( 'ABSPATH', dirname( __FILE__ ) . '/' );
-}
-require_once( ABSPATH . 'wp-settings.php' );
-WP_CONF
-	curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> wp-config.php;
+	cp wp-config-sample.php wp-config.php
+	sed -i "s/define( 'DB_NAME', 'database_name_here' )/define( 'DB_NAME', 'websiteDB' )/g" /etc/nginx/website/wp-config.php
+	sed -i "s/define( 'DB_USER', 'username_here' )/define( 'DB_USER', 'admin' )/g" /etc/nginx/website/wp-config.php
+	sed -i "s/define( 'DB_PASSWORD', 'password_here' )/define( 'DB_PASSWORD', 'password' )/g" /etc/nginx/website/wp-config.php
 fi
 	cd /root/
 	cp wordpress/* /etc/nginx/website/ -r
