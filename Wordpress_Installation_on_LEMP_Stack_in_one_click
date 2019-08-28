@@ -137,14 +137,19 @@ conf_wp
 7)
 echo "=====================START=========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Updates, Upgrades and Distribution Upgrades"					>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Updates, Upgrades and Distribution Upgrades"
 installations										>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Configuring php.ini for nginx and Wordpress"					>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Configuring php.ini for nginx and Wordpress"
 conf_php										>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Configuring nginx.conf and sites-available/website for php and Wordpress"		>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Configuring nginx.conf and sites-available/website for php and Wordpress"
 conf_nginx										>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Creating DB and User"								>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Creating DB and User"
 conf_db											>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Downloading and setting up latest Wordpress version"				>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "Downloading and setting up latest Wordpress version"
 conf_wp											>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "======================END==========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
 ;;
