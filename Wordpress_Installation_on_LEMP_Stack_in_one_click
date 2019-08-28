@@ -89,6 +89,7 @@ fi
 if [[ ! -d wordpress ]]; then
 	tar xzf latest.tar.gz
 fi
+
 	cd wordpress
 if [[ ! -e wp-config.php ]]; then
 	touch wp-config.php
@@ -108,6 +109,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once( ABSPATH . 'wp-settings.php' );
 WP_CONF
 	curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> wp-config.php;
+fi
 	cd /root/
 	cp wordpress/* /etc/nginx/website/ -r
 	mkdir -p /etc/nginx/website/wp-content/uploads
