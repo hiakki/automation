@@ -111,7 +111,9 @@ fi
 	cd /root/
 	cp wordpress/* $root_dir -r
 	mkdir -p $root_dir/wp-content/uploads
-	chown -R :www-data $root_dir/*
+	chown -R www-data:www-data $root_dir/*
+	find $root_dir -type d -exec chmod 755 {} \;
+	find $root_dir -type f -exec chmod 644 {} \;
 	rm -rf /etc/nginx/sites-enabled/$nginx_conf;
 	ln -s /etc/nginx/sites-available/$nginx_conf /etc/nginx/sites-enabled/;
 	service nginx restart;
