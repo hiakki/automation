@@ -107,6 +107,9 @@ if [[ ! -e wp-config.php ]]; then
 	sed -i "s/define( 'DB_NAME', 'database_name_here' )/define( 'DB_NAME', '$db_name' )/g" wp-config.php
 	sed -i "s/define( 'DB_USER', 'username_here' )/define( 'DB_USER', '$user_name' )/g" wp-config.php
 	sed -i "s/define( 'DB_PASSWORD', 'password_here' )/define( 'DB_PASSWORD', '$pw' )/g" wp-config.php
+	
+	# To give permissions to wp-content to install plugins/themes etc
+	echo define('FS_METHOD', 'direct'); >> wp-config.php
 fi
 	cd /root/
 	cp wordpress/* $root_dir -r
