@@ -170,17 +170,17 @@ echo "Creating DB and User"								>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Creating DB and User"
 
 echo "Enter host IP/Endpoint/DNS: (Default: localhost)"
-read $host
+read host
 if [ -z $host ]; then
 	host='localhost'
 fi
 echo "Enter Master username to make connection to MySQL: (Default: root)"
-read $rt_user
+read rt_user
 if [ -z $rt_user ]; then
 	rt_user='root'
 fi
 echo "Enter Password of Master username to make connection to MySQL: (Default: NULL/EMPTY)"
-read $rt_pw
+read rt_pw
 if [ -z $rt_pw ]; then
 	rt_pw=''
 fi
