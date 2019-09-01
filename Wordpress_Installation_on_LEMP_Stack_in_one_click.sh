@@ -91,9 +91,9 @@ service nginx restart
 conf_db() {
 
 	mysql -h $host -u $rt_user --password=$rt_pw -e "
-	create database $db_name;
-	CREATE USER $user_name@$host IDENTIFIED BY '$pw';
-	GRANT ALL PRIVILEGES ON *.* TO $user_name@$host;
+	create database '$db_name';
+	CREATE USER '$user_name'@'$host' IDENTIFIED BY '$pw';
+	GRANT ALL PRIVILEGES ON '$db_name'.* TO '$user_name'@'$host';
 	FLUSH PRIVILEGES;"
 }
 
