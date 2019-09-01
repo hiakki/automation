@@ -90,11 +90,11 @@ service nginx restart
 
 conf_db() {
 
-	mysql -u root -e "
+	mysql -h $host -u $rt_user --password=$rt_pw -e "
 	create database $db_name;
 	CREATE USER $user_name@$host IDENTIFIED BY '$pw';
 	GRANT ALL PRIVILEGES ON *.* TO $user_name@$host;
-	FLUSH PRIVILEGES;" -h $host;
+	FLUSH PRIVILEGES;"
 }
 
 conf_wp() {
@@ -169,6 +169,21 @@ conf_nginx										>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Creating DB and User"								>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Creating DB and User"
 
+echo "Enter host IP/Endpoint/DNS: (Default: localhost)"
+read $host
+if [ -z $host ]; then
+	host='localhost'
+fi
+echo "Enter Master username to make connection to MySQL: (Default: root)"
+read $rt_user
+if [ -z $rt_user ]; then
+	rt_user='root'
+fi
+echo "Enter Password of Master username to make connection to MySQL: (Default: NULL/EMPTY)"
+read $rt_pw
+if [ -z $rt_pw ]; then
+	rt_pw=''
+fi
 echo 'Enter name of Database you want to be created: (Default: websiteDB)'
 read db_name
 if [ -z $db_name ]; then
@@ -183,11 +198,6 @@ echo "Enter Password for $user_name: (Default: password)"
 read pw
 if [ -z $pw ]; then
 	pw='password'
-fi
-echo "Enter host IP/Endpoint/DNS: (Default: localhost)"
-read $host
-if [ -z $host ]; then
-	host='localhost'
 fi
 
 conf_db											>> /root/wordpress_lemp_stack_setup.log  2>&1
