@@ -92,9 +92,9 @@ conf_db() {
 
 	mysql -u root -e "
 	create database $db_name;
-	CREATE USER $user_name@localhost IDENTIFIED BY '$pw';
-	GRANT ALL PRIVILEGES ON *.* TO $user_name@localhost;
-	FLUSH PRIVILEGES;" -h localhost;
+	CREATE USER $user_name@$host IDENTIFIED BY '$pw';
+	GRANT ALL PRIVILEGES ON *.* TO $user_name@$host;
+	FLUSH PRIVILEGES;" -h $host;
 }
 
 conf_wp() {
@@ -112,6 +112,7 @@ if [[ ! -e wp-config.php ]]; then
 	sed -i "s/define( 'DB_NAME', 'database_name_here' )/define( 'DB_NAME', '$db_name' )/g" wp-config.php
 	sed -i "s/define( 'DB_USER', 'username_here' )/define( 'DB_USER', '$user_name' )/g" wp-config.php
 	sed -i "s/define( 'DB_PASSWORD', 'password_here' )/define( 'DB_PASSWORD', '$pw' )/g" wp-config.php
+	sed -i "s/define( 'DB_HOST', 'localhost' )/define( 'DB_PASSWORD', '$host' )/g" wp-config.php
 	
 	# To give permissions to wp-content to install plugins/themes etc
 	echo "define('FS_METHOD', 'direct');" >> wp-config.php
@@ -183,6 +184,11 @@ read pw
 if [ -z $pw ]; then
 	pw='password'
 fi
+echo "Enter host IP/Endpoint/DNS: (Default: localhost)"
+read $host
+if [ -z $host ]; then
+	host='localhost'
+fi
 
 conf_db											>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Downloading and setting up latest Wordpress version"				>> /root/wordpress_lemp_stack_setup.log  2>&1
@@ -195,7 +201,7 @@ echo "Website's nginx Configuration File:		$nginx_conf"
 echo "Database Name: 					$db_name"
 echo "Username: 					$user_name"
 echo "Password: 					$pw"
-echo "Database Host: 					localhost"
+echo "Database Host: 					$host"
 
 exit
 ;;
@@ -231,7 +237,7 @@ echo "Website's nginx Configuration File:		$nginx_conf"
 echo "Database Name: 					$db_name"
 echo "Username: 					$user_name"
 echo "Password: 					$pw"
-echo "Database Host: 					localhost"
+echo "Database Host: 					$host"
 
 
 exit
