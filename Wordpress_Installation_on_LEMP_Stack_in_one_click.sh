@@ -11,14 +11,19 @@
 #
 
 installations() {
-apt update -y; apt upgrade -y; apt dist-upgrade -y;
-apt install -y software-properties-common;
-add-apt-repository -y ppa:ondrej/php;
-apt update -y;
-apt install nginx -y;
-apt install php7.1-mcrypt php7.1-intl php7.1-curl php7.1-xsl php7.1-mbstring php7.1-xsl php7.1-zip php7.1-soap php7.1-gd php7.1-bcmath php7.1-mysql php7.1-fpm -y;
-apt install mysql-server mysql-client -y;
-apt install composer -y;
+	if [ $(date | awk '{print $2 $3}') != $(ls -al /var/lib/apt/periodic/update-success-stamp | awk '{print $6 $7}') ]
+	then
+		apt update -y
+		apt upgrade -y
+		apt dist-upgrade -y
+	fi
+	apt install -y software-properties-common;
+	add-apt-repository -y ppa:ondrej/php;
+	apt update -y;
+	apt install nginx -y;
+	apt install php7.1-mcrypt php7.1-intl php7.1-curl php7.1-xsl php7.1-mbstring php7.1-xsl php7.1-zip php7.1-soap php7.1-gd php7.1-bcmath php7.1-mysql php7.1-fpm -y;
+	apt install mysql-server mysql-client -y;
+	apt install composer -y;
 }
 
 conf_php() {
