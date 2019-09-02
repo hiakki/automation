@@ -8,9 +8,12 @@ fi
 
 installations() {
 
-	apt update -y
-	apt upgrade -y
-	apt dist-upgrade -y
+	if [ $(date | awk '{print $2 $3}') != $(ls -al /var/lib/apt/periodic/update-success-stamp | awk '{print $6 $7}') ]
+	then
+		apt update -y
+		apt upgrade -y
+		apt dist-upgrade -y
+	fi
 	
 	# Installing nginx so that we can download our client key, certificates and ovpn files over http server
 	apt install openvpn easy-rsa iptables-persistent nginx -y
