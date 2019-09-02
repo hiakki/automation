@@ -1,3 +1,15 @@
+#!/bin/bash
+# Author - Akshay Gupta
+# Version - 1.0.0
+# Description - Installs and Configures VPN Server in Ubuntu in just 1 click.
+# Usage -
+#
+#	bash VPN_Server.sh
+#	bash VPN_Server.sh 1		# For server setup
+#	bash VPN_Server.sh 2		# To build client configs
+#
+
+
 # Get root access
 read -p "This script requires root access. Press enter to continue."
 if [ $(whoami) != root ]
@@ -112,7 +124,7 @@ client() {
 
 echo "1. Setup OpenVPN Server"
 echo "2. Setup Client files"
-echo -e "\nDefault Choice is 1+2."
+echo -e "\nDefault Choice is 1 (If server is not setup) + 2."
 
 
 if [ -z $1 ]; then
@@ -147,9 +159,12 @@ clear
 echo -e "You can download your client side files from this address \n http://$IP/$client_name.tar.gz"
 ;;
 *)
-installations
-server
-conf_iptable
+if [ ! -e /etc/openvpn/easy-rsa/keys/ca.crt ]
+then
+		installations
+		server
+		conf_iptable
+fi
 
 echo "Enter name of your client files. (Default: client7)"
 read client_name
