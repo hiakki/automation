@@ -228,6 +228,7 @@ nginx_conf='website'
 db_name='websiteDB'
 user_name='admin'
 pw='password'
+host='localhost'
 rt_user='root'
 
 echo "=====================START=========================="				> /root/wordpress_lemp_stack_setup.log  2>&1
