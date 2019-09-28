@@ -148,7 +148,7 @@ fi
 case $choice in
 1)
 clear
-echo "=====================START=========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "=====================START=========================="				> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Updates, Upgrades and Distribution Upgrades"					>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Updating, Upgrading and Installing Distribution Upgrades"
 installations										>> /root/wordpress_lemp_stack_setup.log  2>&1
@@ -228,8 +228,9 @@ nginx_conf='website'
 db_name='websiteDB'
 user_name='admin'
 pw='password'
+rt_user='root'
 
-echo "=====================START=========================="				>> /root/wordpress_lemp_stack_setup.log  2>&1
+echo "=====================START=========================="				> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Updates, Upgrades and Distribution Upgrades"					>> /root/wordpress_lemp_stack_setup.log  2>&1
 echo "Updating, Upgrading and Installing Distribution Upgrades"
 installations										>> /root/wordpress_lemp_stack_setup.log  2>&1
