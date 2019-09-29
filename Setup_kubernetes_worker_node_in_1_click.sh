@@ -59,5 +59,5 @@ then
 echo 'Enter Token of Master Node:'
 read token
 
-kubeadm join --token $token $master_hostname:6443
+kubeadm join --token $token $master_hostname:6443 --discovery-token-unsafe-skip-ca-verification
 fi
