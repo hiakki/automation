@@ -34,22 +34,22 @@ systemctl restart docker
 
 apt install -y kubelet kubeadm kubectl kubernetes-cni
 
-if [ $(cat /etc/hosts | grep -c $master_hostname) -lt 1 ]
-then
 echo 'Enter Hostname of Master Node:'
 read master_hostname
 
 echo 'Enter IP of Master Node:'
 read master_ip
 
+echo 'Enter Hostname for this Slave/Minion Node:'
+read minion_hostname
+
+if [ $(cat /etc/hosts | grep -c $master_hostname) -lt 1 ]
+then
 echo $master_ip $master_hostname >> /etc/hosts
 fi
 
 if [ $(echo $HOSTNAME) != $minion_hostname ]
 then
-echo 'Enter Hostname for this Slave/Minion Node:'
-read minion_hostname
-
 echo $minion_hostname >> /etc/hostname
 reboot
 fi
