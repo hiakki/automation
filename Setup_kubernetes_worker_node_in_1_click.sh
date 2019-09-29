@@ -50,7 +50,7 @@ fi
 
 if [ $(echo $HOSTNAME) != $minion_hostname ]
 then
-echo $minion_hostname >> /etc/hostname
+echo $minion_hostname > /etc/hostname
 reboot
 fi
 
