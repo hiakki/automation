@@ -33,3 +33,31 @@ systemctl daemon-reload
 systemctl restart docker
 
 apt install -y kubelet kubeadm kubectl kubernetes-cni
+
+if [ $(cat /etc/hosts | grep -c $master_hostname) -lt 1 ]
+then
+echo 'Enter Hostname of Master Node:'
+read master_hostname
+
+echo 'Enter IP of Master Node:'
+read master_ip
+
+echo $master_ip $master_hostname >> /etc/hosts
+fi
+
+if [ $(echo $HOSTNAME) != $minion_hostname ]
+then
+echo 'Enter Hostname for this Slave/Minion Node:'
+read minion_hostname
+
+echo $minion_hostname >> /etc/hostname
+reboot
+fi
+
+if [ $(cat /etc/kubernetes/kubelet.conf | grep -c $master_ip) -lt 1 ]
+then
+echo 'Enter Token of Master Node:'
+read token
+
+kubeadm join --token $token $master_hostname:6443
+fi
