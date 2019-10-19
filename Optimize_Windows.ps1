@@ -161,13 +161,13 @@ function disk_optimization {
 }
 
 if ($choice -eq $null) {
-	$msg = @"
+$msg = @"
 
-	1. Updated Powershell
-	2. Disable Services
-	3. Disk Optiimization
-	
-	"@
+1. Updated Powershell
+2. Disable Services
+3. Disk Optiimization
+
+"@
 
 	Write-Host $msg -ForegroundColor Yellow
 	Write-Host 'Default: All 3 of them will run' -ForegroundColor Red
