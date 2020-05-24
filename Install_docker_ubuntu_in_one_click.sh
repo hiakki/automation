@@ -28,9 +28,5 @@ sudo apt update -y
 # Install the latest version of Docker Engine - Community and containerd
 sudo apt install docker-ce docker-ce-cli containerd.io docker-compose -y
 
-# Create a docker for dockerfile
-mkdir -p /home/$USER/docker/
-cd /home/$USER/docker/
-
-# Verify that Docker Engine - Community is installed correctly by running the hello-world image.
-sudo docker run hello-world
+# Check docker version
+docker -v
